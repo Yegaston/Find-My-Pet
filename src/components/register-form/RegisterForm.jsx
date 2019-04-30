@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import userCollection from '../../services/db-user'
-
+import { auth } from 'firebase';
 
 export default class RegisterForm extends Component {
 
@@ -33,19 +33,39 @@ export default class RegisterForm extends Component {
   async formHandler(e) {
     e.preventDefault();
     console.log("Reacciono!.");
-    try {
-      await userCollection.doc(this.state.email).set({
-        name: this.state.name,
-        country: this.state.country,
-        postalcode: this.state.postalcode,
-        state: this.state.state,
-        address: this.state.address,
-        phone: this.state.phone
-      })
-      console.log("Document Write");
-    }
-    catch (err) {
-      console.log(err)
+
+    if (this.state.password === this.state.confirmPassword) {
+      try {
+        await auth().createUserWithEmailAndPassword(this.state.email, this.state.password);
+        try {
+          await userCollection.doc(this.state.email).set({
+            name: this.state.name,
+            country: this.state.country,
+            postalcode: this.state.postalcode,
+            state: this.state.state,
+            address: this.state.address,
+            phone: this.state.phone
+          })
+          console.log("Document Write");
+        }
+        catch (err) {
+          console.log(err)
+        }
+        this.setState({
+          name: '',
+          country: '',
+          postalcode: '',
+          state: '',
+          address: '',
+          phone: '',
+        })
+      }
+      catch (err) {
+        console.log(err)
+      }
+    } else {
+      console.log("Las claves no coinciden")
+
     }
   }
 
@@ -62,7 +82,7 @@ export default class RegisterForm extends Component {
                 <div className="form-row">
                   <div className="col">
                     <div className="md-form">
-                      <input type="text" name="name" className="form-control" onChange={this.handleChange} />
+                      <input type="text" name="name" className="form-control" onChange={this.handleChange} value={this.state.name}/>
                       <label htmlFor="name">Name</label>
                     </div>
                   </div>
@@ -70,7 +90,7 @@ export default class RegisterForm extends Component {
                 <div className="form-row">
                   <div className="col">
                     <div className="md-form">
-                      <input type="email" name="email" className="form-control" onChange={this.handleChange} />
+                      <input type="email" name="email" className="form-control" onChange={this.handleChange} value={this.state.email} />
                       <label htmlFor="email">Email</label>
                     </div>
                   </div>
@@ -78,13 +98,13 @@ export default class RegisterForm extends Component {
                 <div className="form-row">
                   <div className="col-md-6">
                     <div className="md-form">
-                      <input type="text" name="password" className="form-control" onChange={this.handleChange} />
+                      <input type="password" name="password" className="form-control" onChange={this.handleChange} value={this.state.password}/>
                       <label htmlFor="password">Password</label>
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="md-form">
-                      <input type="text" name="confirmPassword" className="form-control" onChange={this.handleChange} />
+                      <input type="password" name="confirmPassword" className="form-control" onChange={this.handleChange} value={this.state.confirmPassword}/>
                       <label htmlFor="confirmPassword">Confirm Password</label>
                     </div>
                   </div>
@@ -92,7 +112,7 @@ export default class RegisterForm extends Component {
                 <div className="form-row">
                   <div className="col">
                     <div className="md-form">
-                      <input type="text" name="country" className="form-control" onChange={this.handleChange} />
+                      <input type="text" name="country" className="form-control" onChange={this.handleChange} value={this.state.country}/>
                       <label htmlFor="country">Country</label>
                     </div>
                   </div>
@@ -100,13 +120,13 @@ export default class RegisterForm extends Component {
                 <div className="form-row">
                   <div className="col-md-4">
                     <div className="md-form">
-                      <input type="text" name="postalcode" className="form-control" onChange={this.handleChange} />
+                      <input type="number" name="postalcode" className="form-control" onChange={this.handleChange} value={this.state.postalcode}/>
                       <label htmlFor="postalcode">Postal Code</label>
                     </div>
                   </div>
                   <div className="col-md-8">
                     <div className="md-form">
-                      <input type="text" name="state" className="form-control" onChange={this.handleChange} />
+                      <input type="text" name="state" className="form-control" onChange={this.handleChange} value={this.state.state}/>
                       <label htmlFor="state">State</label>
                     </div>
                   </div>
@@ -114,7 +134,7 @@ export default class RegisterForm extends Component {
                 <div className="form-row">
                   <div className="col">
                     <div className="md-form">
-                      <input type="text" name="address" className="form-control" onChange={this.handleChange} />
+                      <input type="text" name="address" className="form-control" onChange={this.handleChange} value={this.state.address}/>
                       <label htmlFor="address">Address</label>
                     </div>
                   </div>
@@ -122,7 +142,7 @@ export default class RegisterForm extends Component {
                 <div className="form-row">
                   <div className="col">
                     <div className="md-form">
-                      <input type="text" name="phone" className="form-control" onChange={this.handleChange} />
+                      <input type="number" name="phone" className="form-control" onChange={this.handleChange} value={this.state.phone}/>
                       <label htmlFor="phone">Phone Numbre</label>
                     </div>
                   </div>
