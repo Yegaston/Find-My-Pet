@@ -10,33 +10,85 @@ import Features from '../features/Features';
 import LoginComponent from '../login/Login'
 import RegisterForm from '../register-form/RegisterForm';
 import Footer from '../footer/Footer.jsx';
-import UserMain from '../userPanelControl/UserMain/UserMain'
+import UserMain from '../userPanelControl/UserMain/UserMain';
+import FindIndex from '../findmypetApp/findIndex/FindIndex';
 
-function Navbar() {
+function ItemsNavWhenNoAuth() {
     return (
-        <nav className="mb-1 navbar navbar-expand-lg navbar-dark orange lighten-1">
-            <a className="navbar-brand" href="/">Find My Pet</a>
-            <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-555"
-                aria-controls="navbarSupportedContent-555" aria-expanded="false" aria-label="Toggle navigation">
-                <span className="navbar-toggler-icon"></span>
-            </button>
-            <div className="collapse navbar-collapse" id="navbarSupportedContent-555">
-                <ul className="navbar-nav ml-auto">
-                    <li className="nav-item active">
-                        <Link to='/' className="nav-link">Home
+        <div className="collapse navbar-collapse" id="navbarSupportedContent-555">
+            <ul className="navbar-nav ml-auto">
+                <li className="nav-item active">
+                    <Link to='/' className="nav-link">Home
                                 <span className="sr-only">(current)</span>
-                        </Link>
-                    </li>
-                    <li className="nav-item active">
-                        <Link to='/login' className="nav-link">Login</Link>
-                    </li>
-                    <li className="nav-item active">
-                        <Link to='/register' className="nav-link">Register</Link>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+                    </Link>
+                </li>
+                <li className="nav-item active">
+                    <Link to='/login' className="nav-link">Login</Link>
+                </li>
+                <li className="nav-item active">
+                    <Link to='/register' className="nav-link">Register</Link>
+                </li>
+            </ul>
+        </div>
     )
+}
+
+function ItemsNavWhenAuth() {
+    return (
+        <div className="collapse navbar-collapse" id="navbarSupportedContent-555">
+            <ul className="navbar-nav ml-auto">
+                <li className="nav-item active">
+                    <Link to='/' className="nav-link">Feed</Link>
+                </li>
+                <li className="nav-item active">
+                    <Link to='/login' className="nav-link">Losts Pets</Link>
+                </li>
+                <li className="nav-item active">
+                    <Link to='/register' className="nav-link">Account</Link>
+                </li>
+            </ul>
+        </div>
+    )
+}
+
+class Navbar extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            authenticated: ''
+        }
+        this.isAuthThisUser = this.isAuthThisUser.bind(this)
+    }
+
+    isAuthThisUser() {
+        auth().onAuthStateChanged((user) => {
+            if (user) {
+                this.setState({ loading: false, authenticated: true, userEmail: user.email });
+                console.log("Auth");
+
+            } else {
+                this.setState({ loading: false, authenticated: false });
+                console.log("No Auth");
+            }
+        });
+    }
+
+    componentDidMount() {
+        this.isAuthThisUser();
+    }
+
+    render() {
+        return (
+            <nav className="mb-1 navbar navbar-expand-lg navbar-dark orange lighten-1">
+                <a className="navbar-brand" href="/">Find My Pet</a>
+                <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-555"
+                    aria-controls="navbarSupportedContent-555" aria-expanded="false" aria-label="Toggle navigation">
+                    <span className="navbar-toggler-icon"></span>
+                </button>
+                {this.state.authenticated ? <ItemsNavWhenAuth /> : <ItemsNavWhenNoAuth />}
+            </nav>
+        )
+    }
 }
 
 function Navigation() {
@@ -67,7 +119,7 @@ function LandingPage() {
     )
 }
 
-class Index extends Component {
+class Index extends Component { 
     constructor() {
         super()
         this.state = {
@@ -100,7 +152,7 @@ class Index extends Component {
     render() {
         return (
             <div>
-                {this.state.authenticated ? <UserMain email={this.state.userEmail} /> : <LandingPage />}
+                {this.state.authenticated ? <FindIndex email={this.state.userEmail} /> : <LandingPage />}
             </div>
         )
     }
