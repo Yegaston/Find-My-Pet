@@ -1,6 +1,7 @@
 // Imports of dependecys
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { auth } from 'firebase';
 
 // Componets imports
 
@@ -9,7 +10,7 @@ import Features from '../features/Features';
 import LoginComponent from '../login/Login'
 import RegisterForm from '../register-form/RegisterForm';
 import Footer from '../footer/Footer.jsx';
-import { auth } from 'firebase';
+import UserMain from '../userPanelControl/UserMain/UserMain'
 
 function Navbar() {
     return (
@@ -51,6 +52,21 @@ function Navigation() {
     )
 }
 
+function LandingPage() {
+    return (
+        <div>
+            <Header />
+            <Features />
+            <div className="mt-5">
+                <RegisterForm />
+            </div>
+            <div className="mt-5">
+                <Footer />
+            </div>
+        </div>
+    )
+}
+
 class Index extends Component {
     constructor() {
         super()
@@ -68,7 +84,7 @@ class Index extends Component {
             if (user) {
                 this.setState({ loading: false, authenticated: true, userEmail: user.email });
                 console.log("Auth");
-                
+
             } else {
                 this.setState({ loading: false, authenticated: false });
                 console.log("No Auth");
@@ -84,12 +100,7 @@ class Index extends Component {
     render() {
         return (
             <div>
-                <Header />
-                <Features />
-                {this.state.authenticated ? <div>{this.state.userEmail}</div> : <RegisterForm />}
-                <div className="mt-5">
-                    <Footer />
-                </div>
+                {this.state.authenticated ? <UserMain email={this.state.userEmail} /> : <LandingPage />}
             </div>
         )
     }
