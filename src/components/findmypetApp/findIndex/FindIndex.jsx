@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { ToastsContainer, ToastsStore } from 'react-toasts';
 
 import UploadLost from '../uploadLost/UploadLost';
 import Feed from '../feed/Feed'
@@ -16,10 +17,15 @@ export default class FindIndex extends Component {
     }
     this.revealPetForm = this.revealPetForm.bind(this);
     this.getLostPets = this.getLostPets.bind(this)
+    this.successToast = this.successToast.bind(this)
   }
 
   revealPetForm() {
     this.setState({ uploadPet: !this.state.uploadPet });
+  }
+
+  successToast(msg) {
+    ToastsStore.success(msg)
   }
 
   async getLostPets() {
@@ -50,18 +56,19 @@ export default class FindIndex extends Component {
           <div className="row d-flex justify-content-center mt-5">
             <div className="card col-md-6">
               <h4 className="card-title mt-2 text-center" onClick={this.revealPetForm}>Published Lost Pet</h4>
-              {this.state.uploadPet ? <UploadLost email={this.props.email} revealPetForm={this.revealPetForm} getLostPets={this.getLostPets}/> : <div></div>}
+              {this.state.uploadPet ? <UploadLost email={this.props.email} revealPetForm={this.revealPetForm} getLostPets={this.getLostPets} successToast={this.successToast} /> : <div></div>}
             </div>
           </div>
 
           <div>
             {this.state.lostPets.map((lostPet) => {
-              return <Feed title={lostPet.title} text={lostPet.text} author={lostPet.author} id={lostPet.id}/>
+              return <Feed title={lostPet.title} text={lostPet.text} author={lostPet.author} id={lostPet.id} />
             })}
-            
+
           </div>
 
         </div>
+        <ToastsContainer store={ToastsStore} />
       </div>
     )
   }

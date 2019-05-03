@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import dbLostPets from '../../../services/db-lostPets';
-
 export default class UploadLost extends Component {
     constructor() {
         super();
@@ -36,6 +35,7 @@ export default class UploadLost extends Component {
             console.log("Upload");
             this.props.revealPetForm();
             this.props.getLostPets();
+            this.props.successToast("Add a new Pet :)")
         }
         catch(err){
             console.log(err);

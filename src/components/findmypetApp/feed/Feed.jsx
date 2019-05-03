@@ -25,6 +25,7 @@ export default class Feed extends Component {
                     </div>
                     <div className="card-footer text-muted text-center">Hace 2 horas</div>
                 </div>
+
             </div>
         )
     }
