@@ -35,7 +35,7 @@ export default class UploadLost extends Component {
             console.log("Upload");
             this.props.revealPetForm();
             this.props.getLostPets();
-            this.props.successToast("Add a new Pet :)")
+            this.props.successToast("Added a new Pet :)")
         }
         catch(err){
             console.log(err);
