@@ -11,8 +11,8 @@ export default class Header extends Component {
                 <img src={PetPhoto} className="img-fluid" alt="Logo de Find My Pet"/>
             </div>
             <div className="col-md-6 ">
-                <h4>Lorem ipsum dolor sit.</h4>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus repellat reprehenderit ullam magnam ipsam id autem vero, deserunt quas beatae aperiam porro aspernatur velit totam optio quod enim quia doloribus, hic voluptas omnis praesentium animi eius. Fugit soluta alias dolor earum harum molestiae atque sit quo magnam, dicta quos!</p>
+                <h4>Find Your Pet </h4>
+                <p>We look for your pet. We are built in such a way that we buy the data that our users enter, whether they are lost pets or found, and if any of these coincide with our bookmarks, we put the two parties in contact. Made with Coffe and Love By Gaston Graciani</p>
             </div>
         </div>
       </div>
