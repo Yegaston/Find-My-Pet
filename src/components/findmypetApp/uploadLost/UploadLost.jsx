@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import dbLostPets from '../../../services/db-lostPets';
+
+
 export default class UploadLost extends Component {
     constructor() {
         super();
@@ -7,7 +9,8 @@ export default class UploadLost extends Component {
         this.state = {
             title: '',
             text: '',
-            petImage: ''
+            petImage: '',
+            imageUrl: ''
         }
 
         this.handleChange = this.handleChange.bind(this);
@@ -25,19 +28,29 @@ export default class UploadLost extends Component {
 
     async formHandler(e) {
         e.preventDefault();
+        var OSName = "Unknown OS";
+        if (navigator.appVersion.indexOf("Win") != -1) OSName = "Windows";
+        if (navigator.appVersion.indexOf("Mac") != -1) OSName = "MacOS";
+        if (navigator.appVersion.indexOf("X11") != -1) OSName = "UNIX";
+        if (navigator.appVersion.indexOf("Linux") != -1) OSName = "Linux";
+
 
         try {
             await dbLostPets.doc().set({
                 title: this.state.title,
                 text: this.state.text,
-                author: this.props.email
+                author: this.props.email,
+                image: this.state.imageUrl,
+                imageUrl: this.state.imageUrl,
+                date: new Date().getTime(),
+                os: OSName,
             })
             console.log("Upload");
             this.props.revealPetForm();
             this.props.getLostPets();
             this.props.successToast("Added a new Pet :)")
         }
-        catch(err){
+        catch (err) {
             console.log(err);
         }
 
@@ -55,6 +68,10 @@ export default class UploadLost extends Component {
                         <label htmlFor="textPetLost"></label>
                         <textarea className="form-control" name="text" rows="3" placeholder="Description" onChange={this.handleChange}></textarea>
                     </div>
+                    <div className="form-group">
+                        <label htmlFor="imageUrl"></label>
+                        <input type="text" name="imageUrl" className="form-control" placeholder="URL Image" onChange={this.handleChange} />
+                    </div>
                     <div className="input-group">
                         <div className="custom-file">
                             <input type="file" className="custom-file-input" name="petImage"
@@ -67,5 +84,5 @@ export default class UploadLost extends Component {
             </form>
         )
     }
-    
+
 }
