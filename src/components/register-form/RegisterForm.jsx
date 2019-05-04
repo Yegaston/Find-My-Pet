@@ -5,8 +5,8 @@ import { auth } from 'firebase';
 
 export default class RegisterForm extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       name: '',
@@ -47,6 +47,7 @@ export default class RegisterForm extends Component {
             phone: this.state.phone
           })
           console.log("Document Write");
+          this.props.successToast("User Register :)")
         }
         catch (err) {
           console.log(err)

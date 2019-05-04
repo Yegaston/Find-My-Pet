@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { auth } from 'firebase';
-
+import { ToastsContainer, ToastsStore } from 'react-toasts';
 // Componets imports
 
 import Header from '../header/Header';
@@ -104,13 +104,13 @@ function Navigation() {
     )
 }
 
-function LandingPage() {
+function LandingPage(props) {
     return (
         <div>
             <Header />
             <Features />
             <div className="mt-5">
-                <RegisterForm />
+                <RegisterForm successToast={props.successToast} />
             </div>
             <div className="mt-5">
                 <Footer />
@@ -119,7 +119,7 @@ function LandingPage() {
     )
 }
 
-class Index extends Component { 
+class Index extends Component {
     constructor() {
         super()
         this.state = {
@@ -127,10 +127,16 @@ class Index extends Component {
             loading: '',
             userEmail: '',
         }
-        this.isAuthThisUser = this.isAuthThisUser.bind(this)
+        this.isAuthThisUser = this.isAuthThisUser.bind(this);
+        this.successToast = this.successToast.bind(this);
 
 
     }
+
+    successToast(msg) {
+        ToastsStore.success(msg)
+    }
+
     isAuthThisUser() {
         auth().onAuthStateChanged((user) => {
             if (user) {
@@ -152,7 +158,8 @@ class Index extends Component {
     render() {
         return (
             <div>
-                {this.state.authenticated ? <FindIndex email={this.state.userEmail} /> : <LandingPage />}
+                {this.state.authenticated ? <FindIndex email={this.state.userEmail} /> : <LandingPage  successToast={this.successToast} />}
+                <ToastsContainer store={ToastsStore} />
             </div>
         )
     }
@@ -163,24 +170,17 @@ class Login extends Component {
         super(props);
 
         this.state = {
-            testing: "Hola"
+
         }
 
-        this.updateTesting = this.updateTesting.bind(this)
+
     }
 
-    updateTesting(newText) {
-        console.log(this.state.testing + " From Parent")
-        console.log(newText)
-        this.setState({
-            testing: newText
-        });
-        console.log(this.state.testing + " From Parent")
-    }
+
     render() {
         return (
             <div>
-                <LoginComponent updateTesting={this.updateTesting} testingText={this.state.testing} />
+                <LoginComponent />
             </div>
         )
 

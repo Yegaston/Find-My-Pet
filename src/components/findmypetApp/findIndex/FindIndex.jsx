@@ -17,8 +17,9 @@ export default class FindIndex extends Component {
     }
     this.revealPetForm = this.revealPetForm.bind(this);
     this.getLostPets = this.getLostPets.bind(this)
-    this.successToast = this.successToast.bind(this)
+    this.successToast = this.successToast.bind(this);
   }
+
 
   revealPetForm() {
     this.setState({ uploadPet: !this.state.uploadPet });
@@ -35,8 +36,10 @@ export default class FindIndex extends Component {
       const lost = {
         title: lostPet.data().title,
         text: lostPet.data().text,
+        imageUrl: lostPet.data().imageUrl,
         author: lostPet.data().author,
-        id: lostPet.id
+        id: lostPet.id,
+        date: lostPet.data().date,
       }
       list.push(lost)
     })
@@ -62,7 +65,7 @@ export default class FindIndex extends Component {
 
           <div>
             {this.state.lostPets.map((lostPet) => {
-              return <Feed title={lostPet.title} text={lostPet.text} author={lostPet.author} id={lostPet.id} />
+              return <Feed key={lostPet.id} title={lostPet.title} imageUrl={lostPet.imageUrl} text={lostPet.text} author={lostPet.author} date={lostPet.date} id={lostPet.id} formateDate={this.formateDate}/>
             })}
 
           </div>
