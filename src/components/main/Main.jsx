@@ -71,7 +71,7 @@ class Navbar extends Component {
                 this.setState({ loading: false, authenticated: false });
                 console.log("No Auth");
             }
-        });
+        });        
     }
 
     componentDidMount() {
@@ -83,7 +83,7 @@ class Navbar extends Component {
             <nav className="mb-1 navbar navbar-expand-lg navbar-dark orange lighten-1">
                 <a className="navbar-brand" href="/">Find My Pet</a>
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-555"
-                    aria-controls="navbarSupportedContent-555" aria-expanded="false" aria-label="Toggle navigation">
+                    aria-controls="navbarSupportedContent-555" aria-expanded="false" arial-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                 </button>
                 {this.state.authenticated ? <ItemsNavWhenAuth /> : <ItemsNavWhenNoAuth />}
