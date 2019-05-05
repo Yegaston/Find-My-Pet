@@ -11,7 +11,6 @@ export default class FindIndex extends Component {
     this.state = {
       uploadPet: false,
       filter: false,
-
       lostPets: [],
 
     }
@@ -65,7 +64,7 @@ export default class FindIndex extends Component {
 
           <div>
             {this.state.lostPets.map((lostPet) => {
-              return <Feed key={lostPet.id} title={lostPet.title} imageUrl={lostPet.imageUrl} text={lostPet.text} author={lostPet.author} date={lostPet.date} id={lostPet.id} formateDate={this.formateDate}/>
+              return <Feed key={lostPet.id} title={lostPet.title} imageUrl={lostPet.imageUrl} text={lostPet.text} author={lostPet.author} date={lostPet.date} id={lostPet.id} formateDate={this.formateDate} email={this.props.email}/>
             })}
 
           </div>
