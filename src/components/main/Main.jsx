@@ -12,6 +12,7 @@ import RegisterForm from '../register-form/RegisterForm';
 import Footer from '../footer/Footer.jsx';
 import UserMain from '../userPanelControl/UserMain/UserMain';
 import FindIndex from '../findmypetApp/findIndex/FindIndex';
+import LostFavs from '../findmypetApp/lostFavs/lostFavs'
 
 function ItemsNavWhenNoAuth() {
     return (
@@ -41,10 +42,10 @@ function ItemsNavWhenAuth() {
                     <Link to='/' className="nav-link">Feed</Link>
                 </li>
                 <li className="nav-item active">
-                    <Link to='/login' className="nav-link">Losts Pets</Link>
+                    <Link to='/lostFavs' className="nav-link">Losts Pets</Link>
                 </li>
                 <li className="nav-item active">
-                    <Link to='/register' className="nav-link">Account</Link>
+                    <Link to='/userSettings' className="nav-link">Account</Link>
                 </li>
             </ul>
         </div>
@@ -100,6 +101,8 @@ function Navigation() {
             <Route path="/" exact component={Index} />
             <Route path="/login/" component={Login} />
             <Route path="/register/" component={RegisterForm} />
+            <Route path="/lostFavs/" component={LostFavs} />
+            <Route path="/userSettings/" component={UserMain} />
         </Router>
     )
 }
