@@ -12,7 +12,8 @@ import RegisterForm from '../register-form/RegisterForm';
 import Footer from '../footer/Footer.jsx';
 import UserMain from '../userPanelControl/UserMain/UserMain';
 import FindIndex from '../findmypetApp/findIndex/FindIndex';
-import LostFavs from '../findmypetApp/lostFavs/lostFavs'
+import LostFavs from '../findmypetApp/lostFavs/lostFavs';
+import Loading from '../loading/Loading';
 
 function ItemsNavWhenNoAuth() {
     return (
@@ -71,7 +72,7 @@ class Navbar extends Component {
                 this.setState({ loading: false, authenticated: false });
                 console.log("No Auth");
             }
-        });        
+        });
     }
 
     componentDidMount() {
@@ -122,12 +123,14 @@ function LandingPage(props) {
     )
 }
 
+
+
 class Index extends Component {
     constructor() {
         super()
         this.state = {
             authenticated: '',
-            loading: '',
+            loading: true,
             userEmail: '',
         }
         this.isAuthThisUser = this.isAuthThisUser.bind(this);
@@ -161,7 +164,7 @@ class Index extends Component {
     render() {
         return (
             <div>
-                {this.state.authenticated ? <FindIndex email={this.state.userEmail} /> : <LandingPage  successToast={this.successToast} />}
+                {this.state.loading ? <Loading /> : this.state.authenticated ? <FindIndex email={this.state.userEmail} /> : <LandingPage successToast={this.successToast} />}
                 <ToastsContainer store={ToastsStore} />
             </div>
         )

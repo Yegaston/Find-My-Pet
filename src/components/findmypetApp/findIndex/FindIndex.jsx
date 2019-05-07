@@ -4,6 +4,7 @@ import { ToastsContainer, ToastsStore } from 'react-toasts';
 import UploadLost from '../uploadLost/UploadLost';
 import Feed from '../feed/Feed'
 import bdLostPets from '../../../services/db-lostPets';
+import Loading from '../../loading/Loading'
 
 export default class FindIndex extends Component {
   constructor(props) {
@@ -12,7 +13,7 @@ export default class FindIndex extends Component {
       uploadPet: false,
       filter: false,
       lostPets: [],
-
+      loading: true
     }
     this.revealPetForm = this.revealPetForm.bind(this);
     this.getLostPets = this.getLostPets.bind(this)
@@ -40,7 +41,10 @@ export default class FindIndex extends Component {
         id: lostPet.id,
         date: lostPet.data().date,
       }
-      list.push(lost)
+      list.push(lost);
+      this.setState({
+        loading: false
+      });
     })
     this.setState({ lostPets: list });
     console.log(this.state.lostPets)
@@ -53,23 +57,46 @@ export default class FindIndex extends Component {
   render() {
     return (
       <div>
-        <div className="container">
+        {this.state.loading ?
+          <Loading /> :
+          <div className="container">
+            <div className="row d-flex justify-content-center mt-5">
+              <div className="card col-md-6">
+                <h4 className="card-title mt-2 text-center" onClick={this.revealPetForm}>Published Lost Pet</h4>
 
-          <div className="row d-flex justify-content-center mt-5">
-            <div className="card col-md-6">
-              <h4 className="card-title mt-2 text-center" onClick={this.revealPetForm}>Published Lost Pet</h4>
-              {this.state.uploadPet ? <UploadLost email={this.props.email} revealPetForm={this.revealPetForm} getLostPets={this.getLostPets} successToast={this.successToast} /> : <div></div>}
+                {this.state.uploadPet ?
+                  <UploadLost
+                    email={this.props.email}
+                    revealPetForm={this.revealPetForm}
+                    getLostPets={this.getLostPets}
+                    successToast={this.successToast}
+                  /> :
+                  <div></div>
+                }
+
+              </div>
             </div>
-          </div>
 
-          <div>
-            {this.state.lostPets.map((lostPet) => {
-              return <Feed key={lostPet.id} title={lostPet.title} imageUrl={lostPet.imageUrl} text={lostPet.text} author={lostPet.author} date={lostPet.date} id={lostPet.id} formateDate={this.formateDate} email={this.props.email}/>
-            })}
+            <div>
+              {this.state.lostPets.map((lostPet) => {
+                return (
+                  <Feed
+                    key={lostPet.id}
+                    title={lostPet.title}
+                    imageUrl={lostPet.imageUrl}
+                    text={lostPet.text}
+                    author={lostPet.author}
+                    date={lostPet.date}
+                    id={lostPet.id} formateDate={this.formateDate}
+                    email={this.props.email}
+                    successToast={this.successToast}
+                  />
+                )
+              })}
 
-          </div>
+            </div>
 
-        </div>
+          </div>}
         <ToastsContainer store={ToastsStore} />
       </div>
     )
