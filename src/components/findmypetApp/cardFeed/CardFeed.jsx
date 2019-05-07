@@ -27,20 +27,18 @@ export default class CardFeed extends Component {
     async favIcon(e, id) {
         console.log("Fav: " + id);
         try {
-            dbUser.doc(this.props.email).update({
-                userFavsPets: [{
+            dbUser.doc(this.props.email)
+                .collection('favorites').doc(id).set({
                     date: new Date().getTime(),
-                    id: id
-                }]
-            })
-            console.log("Updated Succesfully")
+                })
+            this.props.successToast("Add to Favorites :)");
         }
         catch (err) {
             console.log(err)
         }
     }
 
-    commentSee(){
+    commentSee() {
         this.setState({
             commentBox: !this.state.commentBox
         })
@@ -62,14 +60,19 @@ export default class CardFeed extends Component {
                         <h6 className="font-weight-bold indigo-text py-2">{this.props.author}</h6>
                         <p className="card-text">{this.props.text}</p>
                         <hr />
-                        {this.state.commentBox ? 
-                            <CommentBox commentSee={this.commentSee} /> : 
-                            <Icons 
+                        {this.state.commentBox ?
+                            <CommentBox
+                                commentSee={this.commentSee}
+                                email={this.props.email}
+                                id={this.props.id}
+                                successToast={this.props.successToast}
+                            /> :
+                            <Icons
                                 clickIcon={this.clickIcon}
                                 favIcon={this.favIcon}
                                 id={this.props.id}
                                 commentSee={this.commentSee}
-                            /> }
+                            />}
                     </div>
 
                     <div className="card-footer text-muted text-center"><ReactTimeAgo date={this.props.date} /></div>

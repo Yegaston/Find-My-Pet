@@ -16,6 +16,7 @@ export default class Feed extends Component {
                     date={this.props.date}
                     id={this.props.id}
                     email={this.props.email}
+                    successToast={this.props.successToast}
                 />
             </div>
         )

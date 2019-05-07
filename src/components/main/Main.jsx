@@ -12,7 +12,8 @@ import RegisterForm from '../register-form/RegisterForm';
 import Footer from '../footer/Footer.jsx';
 import UserMain from '../userPanelControl/UserMain/UserMain';
 import FindIndex from '../findmypetApp/findIndex/FindIndex';
-import LostFavs from '../findmypetApp/lostFavs/lostFavs'
+import LostFavs from '../findmypetApp/lostFavs/lostFavs';
+import Loading from '../loading/Loading';
 
 function ItemsNavWhenNoAuth() {
     return (
@@ -34,18 +35,23 @@ function ItemsNavWhenNoAuth() {
     )
 }
 
-function ItemsNavWhenAuth() {
+function ItemsNavWhenAuth(props) {
     return (
-        <div className="collapse navbar-collapse" id="navbarSupportedContent-555">
-            <ul className="navbar-nav ml-auto">
-                <li className="nav-item active">
+        <div className="collapse navbar-collapse container" id="navbarSupportedContent-555">
+            <ul className="navbar-nav ml-auto ml-5">
+                <li className="nav-item">
                     <Link to='/' className="nav-link">Feed</Link>
                 </li>
-                <li className="nav-item active">
+                <li className="nav-item">
                     <Link to='/lostFavs' className="nav-link">Losts Pets</Link>
                 </li>
-                <li className="nav-item active">
-                    <Link to='/userSettings' className="nav-link">Account</Link>
+                <li className="nav-item dropdown">
+                    <i className="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">Account Settings</i>
+                    <div className="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink">
+                        <Link to='/userSettings' className="dropdown-item">Account</Link>
+                        <button className="dropdown-item" onClick={props.signOut}>Sign Out</button>
+                    </div>
                 </li>
             </ul>
         </div>
@@ -71,7 +77,7 @@ class Navbar extends Component {
                 this.setState({ loading: false, authenticated: false });
                 console.log("No Auth");
             }
-        });        
+        });
     }
 
     componentDidMount() {
@@ -86,17 +92,17 @@ class Navbar extends Component {
                     aria-controls="navbarSupportedContent-555" aria-expanded="false" arial-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                 </button>
-                {this.state.authenticated ? <ItemsNavWhenAuth /> : <ItemsNavWhenNoAuth />}
+                {this.state.authenticated ? <ItemsNavWhenAuth signOut={this.props.signOut} /> : <ItemsNavWhenNoAuth />}
             </nav>
         )
     }
 }
 
-function Navigation() {
+function Navigation(props) {
     return (
         <Router>
             <div>
-                <Navbar />
+                <Navbar signOut={props.signOut} />
             </div>
             <Route path="/" exact component={Index} />
             <Route path="/login/" component={Login} />
@@ -122,12 +128,14 @@ function LandingPage(props) {
     )
 }
 
+
+
 class Index extends Component {
     constructor() {
         super()
         this.state = {
             authenticated: '',
-            loading: '',
+            loading: true,
             userEmail: '',
         }
         this.isAuthThisUser = this.isAuthThisUser.bind(this);
@@ -161,7 +169,7 @@ class Index extends Component {
     render() {
         return (
             <div>
-                {this.state.authenticated ? <FindIndex email={this.state.userEmail} /> : <LandingPage  successToast={this.successToast} />}
+                {this.state.loading ? <Loading /> : this.state.authenticated ? <FindIndex email={this.state.userEmail} /> : <LandingPage successToast={this.successToast} />}
                 <ToastsContainer store={ToastsStore} />
             </div>
         )
@@ -191,10 +199,22 @@ class Login extends Component {
 }
 
 export default class Main extends Component {
+    constructor() {
+        super()
+        this.signOut = this.signOut.bind(this)
+    }
 
+    async signOut() {
+        try {
+            await auth().signOut()
+            console.log("Out")
+        } catch (err) {
+            console.log("Error")
+        }
+    }
     render() {
         return (
-            <Navigation />
+            <Navigation signOut={this.signOut} />
         )
     }
 }
