@@ -1,4 +1,7 @@
 import React, { Component } from 'react'
+
+import { Redirect } from 'react-router-dom'
+
 import { auth } from 'firebase';
 import { ToastsContainer, ToastsStore } from 'react-toasts';
 
@@ -35,7 +38,7 @@ export default class Login extends Component {
         try {
             await auth().signInWithEmailAndPassword(this.state.email, this.state.password);
             console.log("Login");
-            this.successToast("User Logged, Please back to index");
+            this.successToast("User Logged, Please back to index (Working on redirect)");
         }
         catch (err) {
             console.log(err);
