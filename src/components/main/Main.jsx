@@ -37,7 +37,7 @@ function ItemsNavWhenNoAuth() {
 
 function ItemsNavWhenAuth(props) {
     return (
-        <div className="collapse navbar-collapse container" id="navbarSupportedContent-555">
+        <div className="collapse navbar-collapse " id="navbarSupportedContent-555">
             <ul className="navbar-nav ml-auto ml-5">
                 <li className="nav-item">
                     <Link to='/' className="nav-link">Feed</Link>
