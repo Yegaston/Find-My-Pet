@@ -100,11 +100,6 @@ export default class Login extends Component {
                             <i className="fab fa-github fa-3x"></i>
                         </div>
                     </form>
-
-                    <div className="r">
-                        {/* <button onClick={this.isAuthThisUser}>Is Auth The User??</button> */}
-                        <button onClick={this.signOut}>SignOut</button>
-                    </div>
                 </div>
                 <ToastsContainer store={ToastsStore} />
             </div >
