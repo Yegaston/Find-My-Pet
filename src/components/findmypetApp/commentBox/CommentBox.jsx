@@ -16,9 +16,10 @@ export default class CommentBox extends Component {
 
     }
 
-    this.handleChange = this.handleChange.bind(this)
-    this.sendComment = this.sendComment.bind(this)
-    this.getComments = this.getComments.bind(this)
+    this.handleChange = this.handleChange.bind(this);
+    this.sendComment = this.sendComment.bind(this);
+    this.getComments = this.getComments.bind(this);
+    this.deleteComment = this.deleteComment.bind(this);
   }
 
   handleChange(e) {
@@ -51,7 +52,6 @@ export default class CommentBox extends Component {
         .collection('comments').get();
       const list = [];
 
-
       docs.forEach(doc => {
         const el = {
           author: doc.data().author,
@@ -70,6 +70,22 @@ export default class CommentBox extends Component {
     } catch (err) {
       console.log(err);
     }
+  }
+
+
+  async deleteComment(id) {
+
+    try {
+      await dbLostPets.doc(this.props.id)
+        .collection("comments").doc(id).delete();
+      this.getComments();
+      this.props.successToast("Comment Deleted :)");
+    }
+    
+    catch (err) {
+      console.log(err)
+    }
+
   }
 
   componentDidMount() {
@@ -101,6 +117,8 @@ export default class CommentBox extends Component {
                           text={comment.text}
                           date={comment.date}
                           id={comment.id}
+                          deleteComment={this.deleteComment}
+                          email={this.props.email}
                         />
                       </div>
                     )
