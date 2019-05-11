@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import dbUser from '../../../services/db-user';
+import { auth } from 'firebase';
 
 import Loading from '../../loading/Loading';
-import { auth } from 'firebase';
+import ChangePassword from '../changePassword/ChangePassword';
 
 export default class UserMain extends Component {
     constructor(props) {
@@ -13,6 +14,8 @@ export default class UserMain extends Component {
             user: {},
             loading: true,
             authenticated: false,
+            ChangePassword: false,
+            Main: true,
         }
         this.isAuthThisUser = this.isAuthThisUser.bind(this);
         this.getUserData = this.getUserData.bind(this);
@@ -23,7 +26,7 @@ export default class UserMain extends Component {
         auth().onAuthStateChanged((user) => {
             if (user) {
                 this.setState({ loading: false, authenticated: true, email: user.email });
-                console.log("Auth");
+                console.log("Auth Componen " + this.state.email);
 
             } else {
                 this.setState({ loading: false, authenticated: false });
@@ -34,13 +37,12 @@ export default class UserMain extends Component {
 
 
     async getUserData() {
-        this.isAuthThisUser();
         console.log(this.state.email);
         try {
             const user = await dbUser.doc(this.state.email).get()
             this.setState({
                 user: {
-                    email: user.data().email,
+                    email: user.id,
                     postalCode: user.data().postalCode,
                     address: user.data().address,
                     country: user.data().country,
@@ -49,47 +51,92 @@ export default class UserMain extends Component {
                     state: user.data().state,
                 }
             });
-            console.log(this.state.user)
+            console.log("Tengo q aparecer despues")
         }
         catch (err) {
             console.warn(err);
+            console.log("Estoy en un error")
         }
     }
 
     componentDidMount() {
-        this.getUserData();
+        this.isAuthThisUser();
     }
 
     render() {
         return (
             <div>
-                {this.state.loading ? <Loading /> : 
-                <UserAvatar
-                    email={this.state.user.email}
-                    name={this.state.user.name}
-                    postalcode={this.state.postalCode}
-                />}
+                {this.state.loading ? <Loading /> :
+                    <UserAvatar
+                        email={this.state.user.email}
+                        name={this.state.user.name}
+                        postalcode={this.state.user.postalCode}
+                        getUserData={this.getUserData}
+                        loading={this.state.loading}
+                    />}
             </div>
         )
     }
 }
 
-function UserAvatar(props) {
+class UserAvatar extends Component {
+    constructor(props) {
+        super(props)
+    }
+    componentDidMount() {
+        this.props.getUserData();
+    }
+    render() {
+        return (
+            <div className="container">
+                <div className="row mt-5">
+                    <div className="col-md-2">
+                        <LateralBar />
+                    </div>
+                    <Main
+                        email={this.props.email}
+                        name={this.props.name}
+                        postalcode={this.props.postalCode}
+                        getUserData={this.props.getUserData}
+                        loading={this.props.loading}
+                    />
+                </div>
+            </div>
+        )
+    }
+}
+
+
+function Main(props) {
     return (
-        <div className="m-3">
-            <div className="row mt-5">
-                <div className="col-md-2">
-                    <h2>Lateral Bar</h2>
-                </div>
-                <div className="col-md-4 ">
-                    <img className="img-fluid" src="https://avatars0.githubusercontent.com/u/39235181?s=460&v=4" alt="Profile ge" />
-                </div>
-                <div className="div col-md-4">
-                    <h4>{props.name}</h4>
-                    <h5 className="subname">{props.email}</h5>
-                    <h5 className="subname">{props.name}</h5>
-                    <h5 className="subname">Postal Code: {props.postalcode}</h5>
-                </div>
+        <div className="row m-2">
+            <div className="col-md-4">
+                <img className="img-fluid" src="https://avatars0.githubusercontent.com/u/39235181?s=460&v=4" alt="Profile ge" />
+            </div>
+
+            <div className="div col-md-6">
+                <h4>{props.name}</h4>
+                <h5 className="subname">{props.email}</h5>
+                <h5 className="subname">Postal Code: {props.postalcode}</h5>
+            </div>
+
+        </div>
+    )
+}
+
+
+
+function LateralBar() {
+    return (
+
+        <div className="row d-flex justify-content-center mb-5">
+            <div>
+                <nav className="nav flex-column pink lighten-3 py-4 mb-r font-weight-bold z-depth-1">
+                    <p className="nav-link white-text" href="#">Change Password</p>
+                    <p className="nav-link white-text" href="#">Change Password</p>
+                    <p className="nav-link white-text" href="#">Personal Information</p>
+                    <p className="nav-link white-text" href="#">Others</p>
+                </nav>
             </div>
         </div>
     )
