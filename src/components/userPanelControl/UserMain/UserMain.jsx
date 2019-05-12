@@ -4,6 +4,8 @@ import { auth } from 'firebase';
 
 import Loading from '../../loading/Loading';
 import ChangePassword from '../changePassword/ChangePassword';
+import LateralBar from '../lateralBar/LateralBar';
+
 
 export default class UserMain extends Component {
     constructor(props) {
@@ -14,11 +16,13 @@ export default class UserMain extends Component {
             user: {},
             loading: true,
             authenticated: false,
-            ChangePassword: false,
-            Main: true,
+            changePassword: false,
+            main: true,
         }
         this.isAuthThisUser = this.isAuthThisUser.bind(this);
         this.getUserData = this.getUserData.bind(this);
+        this.activateMain = this.activateMain.bind(this)
+        this.activateChangePassword = this.activateChangePassword.bind(this);
     }
 
 
@@ -35,6 +39,19 @@ export default class UserMain extends Component {
         });
     }
 
+    activateMain(){
+        this.setState({
+            changePassword: false,
+            main: true,
+        })
+    }
+
+    activateChangePassword() {
+        this.setState({
+            changePassword: true,
+            main: false,
+        })
+    }
 
     async getUserData() {
         console.log(this.state.email);
@@ -65,15 +82,28 @@ export default class UserMain extends Component {
 
     render() {
         return (
-            <div>
+            <div className="container mt-2">
                 {this.state.loading ? <Loading /> :
-                    <UserAvatar
-                        email={this.state.user.email}
-                        name={this.state.user.name}
-                        postalcode={this.state.user.postalCode}
-                        getUserData={this.getUserData}
-                        loading={this.state.loading}
-                    />}
+
+                    <div className=" row">
+                        <div className="col-md-2">
+                            <LateralBar activateMain={this.activateMain} activateChangePassword={this.activateChangePassword}/>
+                        </div>
+                        <div className="col-md-10">
+                            {this.state.main ? <div>
+                                <UserAvatar
+                                    email={this.state.user.email}
+                                    name={this.state.user.name}
+                                    postalcode={this.state.user.postalCode}
+                                    getUserData={this.getUserData}
+                                    loading={this.state.loading}
+                                />
+                            </div> : <div></div>}
+                            {this.state.changePassword ? <div><ChangePassword email={this.state.email} /></div> : <div></div>}
+                        </div>
+                    </div>
+
+                }
             </div>
         )
     }
@@ -89,10 +119,7 @@ class UserAvatar extends Component {
     render() {
         return (
             <div className="container">
-                <div className="row mt-5">
-                    <div className="col-md-2">
-                        <LateralBar />
-                    </div>
+                <div className="row">
                     <Main
                         email={this.props.email}
                         name={this.props.name}
@@ -126,18 +153,4 @@ function Main(props) {
 
 
 
-function LateralBar() {
-    return (
 
-        <div className="row d-flex justify-content-center mb-5">
-            <div>
-                <nav className="nav flex-column pink lighten-3 py-4 mb-r font-weight-bold z-depth-1">
-                    <p className="nav-link white-text" href="#">Change Password</p>
-                    <p className="nav-link white-text" href="#">Change Password</p>
-                    <p className="nav-link white-text" href="#">Personal Information</p>
-                    <p className="nav-link white-text" href="#">Others</p>
-                </nav>
-            </div>
-        </div>
-    )
-}
